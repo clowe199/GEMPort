@@ -115,7 +115,6 @@ const DotWaveAnimation = ({ matrixModeActive, funModeActive, logoFunModeActive }
     return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full z-[1] pointer-events-none" />;
 };
 
-// SIMPLIFIED ColorSplashCursor Component
 const ColorSplashCursor = ({ funModeActive, matrixModeActive }) => {
   const cursorOuterRef = useRef(null);
   const matrixCursorRef = useRef(null);
@@ -127,21 +126,16 @@ const ColorSplashCursor = ({ funModeActive, matrixModeActive }) => {
     const handleMouseMove = (e) => {
       lastMousePos.current.x = e.clientX;
       lastMousePos.current.y = e.clientY;
-      // For debugging: console.log('Mouse:', lastMousePos.current.x, lastMousePos.current.y);
+      console.log('Mouse moved in ColorSplashCursor:', lastMousePos.current.x, lastMousePos.current.y); // DEBUG LINE UNCOMMENTED
     };
 
     const updateCursorVisuals = () => {
-      const xPos = lastMousePos.current.x;
-      const yPos = lastMousePos.current.y;
-
+      console.log('Updating visuals with:', lastMousePos.current.x, lastMousePos.current.y, matrixModeActive); // DEBUG LINE UNCOMMENTED
       if (matrixCursorRef.current) {
-        matrixCursorRef.current.style.left = `${xPos + 2}px`; // Small offset for block cursor
-        matrixCursorRef.current.style.top = `${yPos + 2}px`;
+        matrixCursorRef.current.style.transform = `translate3d(${lastMousePos.current.x + 2}px, ${lastMousePos.current.y + 2}px, 0)`;
       }
       if (cursorOuterRef.current) {
-        // Directly position top-left corner at mouse position
-        cursorOuterRef.current.style.left = `${xPos}px`;
-        cursorOuterRef.current.style.top = `${yPos}px`;
+        cursorOuterRef.current.style.transform = `translate3d(${lastMousePos.current.x}px, ${lastMousePos.current.y}px, 0) translate(-50%, -50%)`;
       }
       animationFrameId.current = requestAnimationFrame(updateCursorVisuals);
     };
@@ -161,6 +155,7 @@ const ColorSplashCursor = ({ funModeActive, matrixModeActive }) => {
     const interactiveElements = document.querySelectorAll(
       'button, a, [data-interactive], input, textarea, select'
     );
+
     const handleMouseEnter = (e) => {
       setIsHoveringInteractiveElement(true);
       const target = e.target.closest('button, a, [data-interactive], input, textarea, select');
@@ -170,34 +165,75 @@ const ColorSplashCursor = ({ funModeActive, matrixModeActive }) => {
             document.body.style.cursor = 'pointer';
         } else if (tagName === 'input' || tagName === 'textarea') {
             document.body.style.cursor = 'text';
-        } else { document.body.style.cursor = 'auto'; }
-      } else { document.body.style.cursor = 'auto'; }
+        } else {
+            document.body.style.cursor = 'auto';
+        }
+      } else {
+        document.body.style.cursor = 'auto'; 
+      }
     };
+
     const handleMouseLeave = () => {
       setIsHoveringInteractiveElement(false);
       document.body.style.cursor = 'none';
     };
-    interactiveElements.forEach(el => { el.addEventListener('mouseenter', handleMouseEnter); el.addEventListener('mouseleave', handleMouseLeave); });
-    if (!isHoveringInteractiveElement) document.body.style.cursor = 'none';
-    return () => { interactiveElements.forEach(el => { el.removeEventListener('mouseenter', handleMouseEnter); el.removeEventListener('mouseleave', handleMouseLeave); }); document.body.style.cursor = 'auto'; };
+
+    interactiveElements.forEach(el => {
+      el.addEventListener('mouseenter', handleMouseEnter);
+      el.addEventListener('mouseleave', handleMouseLeave);
+    });
+    
+    if (!isHoveringInteractiveElement) {
+        document.body.style.cursor = 'none';
+    }
+
+    return () => {
+      interactiveElements.forEach(el => {
+        el.removeEventListener('mouseenter', handleMouseEnter);
+        el.removeEventListener('mouseleave', handleMouseLeave);
+      });
+      document.body.style.cursor = 'auto'; 
+    };
   }, [isHoveringInteractiveElement]);
 
   const showCustomSplashCursor = !isHoveringInteractiveElement && !matrixModeActive;
 
   if (matrixModeActive) {
-    return ( <div ref={matrixCursorRef} className="fixed pointer-events-none z-[9999] w-2 h-5 bg-matrix-green animate-cursor-blink" style={{ transform: 'translateY(-100%)' /* Adjust block cursor anchor */ }} /> );
+    return (
+      <div
+        ref={matrixCursorRef}
+        className="fixed pointer-events-none z-[9999] w-2 h-5 bg-matrix-green animate-cursor-blink"
+        style={{ left: 0, top: 0, transform: `translate3d(${lastMousePos.current.x + 2}px, ${lastMousePos.current.y + 2}px, 0)` }} 
+      />
+    );
   }
-  if (!showCustomSplashCursor) return null; 
+  
+  if (!showCustomSplashCursor) {
+      return null; 
+  }
   
   let cursorOuterClasses = "fixed pointer-events-none z-[9999] rounded-full transition-all duration-200 ease-out";
   const currentCursorSize = funModeActive ? (24 * 1.5) : 24;
   const blurAmount = funModeActive ? 'blur-md' : 'blur-sm';
   const opacityAmount = funModeActive ? 'opacity-90' : 'opacity-70';
+
   cursorOuterClasses += ` bg-gradient-to-br from-cyan-400 via-pink-500 to-yellow-400 ${opacityAmount} ${blurAmount}`;
-  if (funModeActive) cursorOuterClasses += ' scale-150 animate-pulse-fast';
+  if (funModeActive) { 
+    cursorOuterClasses += ' scale-150 animate-pulse-fast';
+  }
   
   return (
-    <div ref={cursorOuterRef} className={cursorOuterClasses} style={{ width: `${currentCursorSize}px`, height: `${currentCursorSize}px` }} />
+    <div
+      ref={cursorOuterRef}
+      className={cursorOuterClasses}
+      style={{ 
+        width: `${currentCursorSize}px`, 
+        height: `${currentCursorSize}px`, 
+        left: 0, // Base position
+        top: 0,  // Base position
+        transform: `translate3d(${lastMousePos.current.x}px, ${lastMousePos.current.y}px, 0) translate(-50%, -50%)` // Dynamic positioning
+      }}
+    />
   );
 };
 
@@ -549,6 +585,7 @@ export default function App() {
   
   useEffect(() => { // For managing global body classes and base styles
       const body = document.body;
+      // Base styles NOT related to cursor - cursor is managed by ColorSplashCursor now
       body.style.fontFamily = "'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace";
       body.style.webkitFontSmoothing = 'antialiased';
       body.style.mozOsxFontSmoothing = 'grayscale';
