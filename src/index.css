@@ -1,0 +1,128 @@
+/* src/index.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Global Body Styles (managed by App.jsx useEffect) */
+body.is-loading {
+  overflow: hidden;
+}
+body.fun-mode-active-bg { /* For Konami/Logo fun mode background pulse */
+  animation: globalFunBg 5s infinite alternate;
+}
+body.matrix-mode-active-bg { /* For Matrix mode global theme */
+  background-color: #000 !important;
+  color: #00FF00 !important;
+}
+
+/* General Text & Filter Styles for Matrix Mode */
+.matrix-text { /* This class can be applied to the main div in App.jsx if body targeting is tricky */
+  color: #00FF00 !important;
+  text-shadow: 0 0 3px #00FF00, 0 0 7px #00FF00;
+}
+.filter-matrix-image {
+  filter: grayscale(1) contrast(1.5) brightness(0.8) hue-rotate(100deg) sepia(0.3) !important;
+  border-color: #00FF00 !important;
+  mix-blend-mode: screen; 
+}
+
+/* Matrix Specific Element Styles */
+.matrix-mode-active-bg ::selection { /* More specific selector for matrix mode */
+  background: #00FF00;
+  color: #000000;
+}
+.matrix-mode-active-bg input::placeholder,
+.matrix-mode-active-bg textarea::placeholder {
+  color: rgba(0, 255, 0, 0.5) !important;
+}
+
+/* Cursor Blink for Matrix Mode */
+.animate-cursor-blink {
+  animation: cursorBlink 1s steps(1) infinite;
+}
+@keyframes cursorBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* General Animations (from previous setup) */
+@keyframes globalFunBg { 0% { background-color: #111; } 25% { background-color: #2c003e; } 50% { background-color: #00303e; } 75% { background-color: #3e2700; } 100% { background-color: #111; } }
+@keyframes fade-in-down { 0% { opacity: 0; transform: translateY(-15px); } 100% { opacity: 1; transform: translateY(0); } }
+.animate-fade-in-down { animation: fade-in-down 0.7s ease-out forwards; }
+@keyframes fade-in-up { 0% { opacity: 0; transform: translateY(15px); } 100% { opacity: 1; transform: translateY(0); } }
+.animate-fade-in-up { animation: fade-in-up 0.7s ease-out forwards; }
+
+/* Animation Delays */
+.animation-delay-200 { animation-delay: 0.2s !important; }
+.animation-delay-300 { animation-delay: 0.3s !important; }
+.animation-delay-400 { animation-delay: 0.4s !important; }
+.animation-delay-600 { animation-delay: 0.6s !important; }
+.animation-delay-\[600ms\] { animation-delay: 0.6s !important; }
+.animation-delay-\[800ms\] { animation-delay: 0.8s !important; }
+
+/* Cursor Animations */
+.animate-spin-slow { animation: spin 3s linear infinite; }
+.animate-spin-fast { animation: spin 0.5s linear infinite; }
+@keyframes spin { from { transform: translate(-50%, -50%) rotate(0deg); } to { transform: translate(-50%, -50%) rotate(360deg); } }
+.animate-pulse-fast { animation: pulse 0.5s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+
+/* Hero Text Letter Reveal */
+@keyframes letter-reveal-animation { 0% { opacity: 0; transform: translateY(20px) scale(0.8); } 60% { opacity: 0.7; transform: translateY(-5px) scale(1.05); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
+.animate-letter-reveal { animation-name: letter-reveal-animation; animation-duration: 0.5s; animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000); animation-fill-mode: forwards; }
+
+/* Preloader Animation */
+@keyframes preloader-fill-animation { 0% { transform: translateX(-100%); } 100% { transform: translateX(0%); } }
+.animate-preloader-fill { animation: preloader-fill-animation 1.5s ease-in-out infinite alternate; }
+
+/* Scroll Animations */
+.animate-scroll-fade-in { animation: scroll-fade-in 0.8s ease-out forwards; }
+@keyframes scroll-fade-in { 0% { opacity: 0; } 100% { opacity: 1; } }
+
+.animate-scroll-fade-in-up { animation: scroll-fade-in-up 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards; }
+@keyframes scroll-fade-in-up { 0% { opacity: 0; transform: translateY(50px); filter: grayscale(80%); } 100% { opacity: 1; transform: translateY(0); filter: grayscale(0%); } }
+
+.animate-scroll-fade-in-left { animation: scroll-fade-in-left 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+@keyframes scroll-fade-in-left { 0% { opacity: 0; transform: translateX(-50px); filter: grayscale(80%); } 100% { opacity: 1; transform: translateX(0); filter: grayscale(0%); } }
+
+.animate-scroll-fade-in-right { animation: scroll-fade-in-right 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+@keyframes scroll-fade-in-right { 0% { opacity: 0; transform: translateX(50px); filter: grayscale(80%); } 100% { opacity: 1; transform: translateX(0); filter: grayscale(0%); } }
+
+.animate-scroll-zoom-in { animation: scroll-zoom-in 0.7s ease-out forwards; }
+@keyframes scroll-zoom-in { 0% { opacity: 0; transform: scale(0.9); filter: grayscale(100%); } 100% { opacity: 1; transform: scale(1); filter: grayscale(0%); } }
+
+/* Easter Egg Animations */
+.animate-text-rainbow { animation: textRainbow 2s linear infinite; }
+@keyframes textRainbow { 0%,100%{color: #06b6d4;} 25%{color: #ec4899;} 50%{color: #facc15;} 75%{color: #8b5cf6;} }
+.animate-text-rainbow-fast { animation: textRainbow 0.5s linear infinite; }
+
+.animate-button-pulse { animation: buttonPulse 1s infinite; }
+@keyframes buttonPulse { 0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(236, 72, 153, 0.7); } 50% { transform: scale(1.05); box-shadow: 0 0 10px 10px rgba(236, 72, 153, 0); } }
+
+.animate-image-color-cycle { animation: imageColorCycle 5s infinite linear; }
+@keyframes imageColorCycle { 0%, 100% { filter: grayscale(0%) hue-rotate(0deg) saturate(1.5); } 50% { filter: grayscale(0%) hue-rotate(360deg) saturate(2.5) brightness(1.1); } }
+.animate-image-color-cycle-fast { animation: imageColorCycle 2s infinite linear; }
+
+.animate-card-bounce { animation: cardBounce 0.8s ease-in-out infinite alternate; }
+@keyframes cardBounce { 0% { transform: translateY(0) rotate(-1deg); } 100% { transform: translateY(-10px) rotate(1deg); } }
+
+.animate-tag-pulse { animation: tagPulse 1.5s infinite ease-in-out; }
+@keyframes tagPulse { 0%, 100% { opacity: 0.7; transform: scale(0.95); } 50% { opacity: 1; transform: scale(1.05); } }
+
+.animate-form-shake { animation: formShake 0.5s cubic-bezier(.36,.07,.19,.97) both infinite alternate; }
+@keyframes formShake { 0%, 100% { transform: translateX(0) rotate(0); } 10% { transform: translateX(-3px) rotate(-0.5deg); } 30% { transform: translateX(3px) rotate(0.5deg); } 50% { transform: translateX(-3px) rotate(-0.5deg); } 70% { transform: translateX(3px) rotate(0.5deg); } 90% { transform: translateX(-3px) rotate(-0.5deg); } }
+
+.animate-fun-mode-bg-pulse { animation: funModeBgPulse 1s infinite alternate; }
+@keyframes funModeBgPulse { 0% { background: rgba(6, 182, 212, 0.1); } 25% { background: rgba(236, 72, 153, 0.1); } 50% { background: rgba(250, 204, 21, 0.1); } 75% { background: rgba(139, 92, 246, 0.1); } 100% { background: rgba(6, 182, 212, 0.1); } }
+
+@keyframes logoFunBg { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+.animate-text-pop { animation: textPop 0.3s ease-out forwards; }
+@keyframes textPop { 0% {transform: scale(1);} 50% {transform: scale(1.1);} 100% {transform: scale(1);} }
+
+.animate-word-pop { animation: wordPop 0.5s ease-out; }
+@keyframes wordPop { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.2) rotate(-5deg); } }
+
+/* Initial states for scroll animations (applied via JS checking isVisible state) */
+/* These are good for initial setup, but Tailwind's opacity-0, scale-90 etc. can also be used directly on elements if preferred before animation class is applied */
+.opacity-0 { opacity: 0; }
+.scale-90 { transform: scale(0.9); }
+.filter.grayscale { filter: grayscale(100%); }
